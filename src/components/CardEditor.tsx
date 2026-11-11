@@ -212,104 +212,6 @@ export function CardEditor() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:py-12">
-      {/* DB-backed Saved Cards List */}
-      {(loadingCards || savedCards.length > 0) && (
-        <div className="mb-8 rounded-2xl border border-amber-200/80 bg-amber-50/70 p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2 text-xs font-semibold text-amber-900">
-              <History className="h-4 w-4" />
-              <span>
-                만든 카드 목록 (DB 저장 · {savedCards.length}개)
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              {selectedTokens.length > 0 && (
-                <button
-                  type="button"
-                  disabled={deleting}
-                  onClick={() => handleDeleteCards(selectedTokens)}
-                  className="inline-flex items-center gap-1 rounded-lg bg-rose-700 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-rose-800 disabled:opacity-50 cursor-pointer"
-                >
-                  <Trash2 className="h-3 w-3" />
-                  선택 삭제 ({selectedTokens.length})
-                </button>
-              )}
-              <button
-                type="button"
-                onClick={() => void loadSavedCards()}
-                className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-medium text-amber-900 hover:bg-amber-100 cursor-pointer"
-              >
-                <RefreshCw className="h-3 w-3" />
-                새로고침
-              </button>
-            </div>
-          </div>
-
-          {loadingCards && savedCards.length === 0 ? (
-            <p className="text-xs text-amber-800/70 py-1">
-              DB에서 카드 목록을 불러오는 중...
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-              {savedCards.map((c) => {
-                const checked = selectedTokens.includes(c.manageToken);
-                return (
-                  <div
-                    key={c.manageToken}
-                    className={`flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2 text-xs border transition shadow-xs ${
-                      checked
-                        ? "border-rose-400 ring-1 ring-rose-300"
-                        : "border-amber-200 hover:border-amber-400"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 min-w-0 flex-1">
-                      <input
-                        type="checkbox"
-                        checked={checked}
-                        onChange={() => toggleSelectToken(c.manageToken)}
-                        aria-label={`${c.title} 선택`}
-                        className="h-3.5 w-3.5 rounded accent-red-800 cursor-pointer shrink-0"
-                      />
-                      <Link
-                        href={`/manage/${c.manageToken}`}
-                        className="min-w-0 flex-1 group"
-                      >
-                        <div className="font-semibold text-stone-800 truncate group-hover:text-red-800">
-                          {c.title}
-                        </div>
-                        <div className="text-[11px] text-stone-500 flex flex-wrap items-center gap-1.5 mt-0.5">
-                          <span>{c.senderName}</span>
-                          <span>·</span>
-                          <span>발송 {c.deliveryCount}</span>
-                          <span>·</span>
-                          <span className="text-emerald-700 font-medium">
-                            열람 {c.totalOpens}
-                          </span>
-                          <span>·</span>
-                          <span className="text-amber-700 font-medium">
-                            답장 {c.replyCount}
-                          </span>
-                        </div>
-                      </Link>
-                    </div>
-                    <button
-                      type="button"
-                      disabled={deleting}
-                      onClick={() => handleDeleteCards([c.manageToken])}
-                      title="카드 삭제"
-                      aria-label={`${c.title} 삭제`}
-                      className="rounded-lg p-1.5 text-stone-400 hover:bg-rose-50 hover:text-rose-700 shrink-0 cursor-pointer"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
         {/* Left: Card Editor Form */}
         <form
@@ -595,6 +497,104 @@ export function CardEditor() {
           />
         </div>
       </div>
+
+      {/* DB-backed Saved Cards List (bottom) */}
+      {(loadingCards || savedCards.length > 0) && (
+        <div className="mt-10 rounded-2xl border border-amber-200/80 bg-amber-50/70 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div className="flex items-center gap-2 text-xs font-semibold text-amber-900">
+              <History className="h-4 w-4" />
+              <span>
+                만든 카드 목록 (DB 저장 · {savedCards.length}개)
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              {selectedTokens.length > 0 && (
+                <button
+                  type="button"
+                  disabled={deleting}
+                  onClick={() => handleDeleteCards(selectedTokens)}
+                  className="inline-flex items-center gap-1 rounded-lg bg-rose-700 px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-rose-800 disabled:opacity-50 cursor-pointer"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  선택 삭제 ({selectedTokens.length})
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => void loadSavedCards()}
+                className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-medium text-amber-900 hover:bg-amber-100 cursor-pointer"
+              >
+                <RefreshCw className="h-3 w-3" />
+                새로고침
+              </button>
+            </div>
+          </div>
+
+          {loadingCards && savedCards.length === 0 ? (
+            <p className="text-xs text-amber-800/70 py-1">
+              DB에서 카드 목록을 불러오는 중...
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+              {savedCards.map((c) => {
+                const checked = selectedTokens.includes(c.manageToken);
+                return (
+                  <div
+                    key={c.manageToken}
+                    className={`flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2 text-xs border transition shadow-xs ${
+                      checked
+                        ? "border-rose-400 ring-1 ring-rose-300"
+                        : "border-amber-200 hover:border-amber-400"
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0 flex-1">
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={() => toggleSelectToken(c.manageToken)}
+                        aria-label={`${c.title} 선택`}
+                        className="h-3.5 w-3.5 rounded accent-red-800 cursor-pointer shrink-0"
+                      />
+                      <Link
+                        href={`/manage/${c.manageToken}`}
+                        className="min-w-0 flex-1 group"
+                      >
+                        <div className="font-semibold text-stone-800 truncate group-hover:text-red-800">
+                          {c.title}
+                        </div>
+                        <div className="text-[11px] text-stone-500 flex flex-wrap items-center gap-1.5 mt-0.5">
+                          <span>{c.senderName}</span>
+                          <span>·</span>
+                          <span>발송 {c.deliveryCount}</span>
+                          <span>·</span>
+                          <span className="text-emerald-700 font-medium">
+                            열람 {c.totalOpens}
+                          </span>
+                          <span>·</span>
+                          <span className="text-amber-700 font-medium">
+                            답장 {c.replyCount}
+                          </span>
+                        </div>
+                      </Link>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={deleting}
+                      onClick={() => handleDeleteCards([c.manageToken])}
+                      title="카드 삭제"
+                      aria-label={`${c.title} 삭제`}
+                      className="rounded-lg p-1.5 text-stone-400 hover:bg-rose-50 hover:text-rose-700 shrink-0 cursor-pointer"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
