@@ -257,7 +257,7 @@ export async function POST(
         String(body.recipientName ?? "").trim() || "소중한 분";
       const token = nanoid(10);
       const cardUrl = buildCardUrl(baseUrl, card.slug, token);
-      const imageUrl = `${baseUrl}/c/${encodeURIComponent(card.slug)}/opengraph-image`;
+      const imageUrl = `${baseUrl}/c/${encodeURIComponent(card.slug)}/opengraph-image?v=2`;
 
       const delivery = await prisma.delivery.create({
         data: {

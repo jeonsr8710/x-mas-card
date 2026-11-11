@@ -45,6 +45,8 @@ export interface KakaoSharePayload {
     title: string;
     description: string;
     imageUrl: string;
+    imageWidth: number;
+    imageHeight: number;
     link: {
       mobileWebUrl: string;
       webUrl: string;
@@ -81,6 +83,8 @@ export function buildKakaoSharePayload(params: {
       title: `🎄 ${params.title}`,
       description,
       imageUrl: params.imageUrl,
+      imageWidth: 1200,
+      imageHeight: 600,
       link: {
         mobileWebUrl: params.cardUrl,
         webUrl: params.cardUrl,

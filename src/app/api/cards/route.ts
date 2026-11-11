@@ -27,7 +27,8 @@ export async function GET() {
         title: true,
         createdAt: true,
         deliveries: {
-          select: { openCount: true },
+          orderBy: { createdAt: "desc" },
+          select: { openCount: true, recipientName: true },
         },
         _count: {
           select: { deliveries: true, replies: true },
@@ -35,18 +36,35 @@ export async function GET() {
       },
     });
 
-    const cards = rows.map((c) => ({
-      id: c.id,
-      slug: c.slug,
-      manageToken: c.manageToken,
-      templateId: c.templateId,
-      senderName: c.senderName,
-      title: c.title,
-      createdAt: c.createdAt.toISOString(),
-      deliveryCount: c._count.deliveries,
-      replyCount: c._count.replies,
-      totalOpens: c.deliveries.reduce((sum, d) => sum + d.openCount, 0),
-    }));
+    const cards = rows.map((c) => {
+      const recipients = Array.from(
+        new Set(
+          c.deliveries
+            .map((d) => d.recipientName.trim())
+            .filter((name) => name.length > 0)
+        )
+      );
+      const recipientSummary =
+        recipients.length === 0
+          ? "미발송"
+          : recipients.length === 1
+            ? recipients[0]
+            : `${recipients[0]} 외 ${recipients.length - 1}명`;
+
+      return {
+        id: c.id,
+        slug: c.slug,
+        manageToken: c.manageToken,
+        templateId: c.templateId,
+        senderName: c.senderName,
+        title: c.title,
+        createdAt: c.createdAt.toISOString(),
+        deliveryCount: c._count.deliveries,
+        recipientSummary,
+        replyCount: c._count.replies,
+        totalOpens: c.deliveries.reduce((sum, d) => sum + d.openCount, 0),
+      };
+    });
 
     return NextResponse.json({ cards });
   } catch (err) {

@@ -143,8 +143,10 @@ export function InteractiveCardViewer({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-3xl ${
-        isPreview ? "min-h-[540px] p-4 sm:p-6" : "min-h-screen px-4 py-10 sm:py-16"
+      className={`relative overflow-hidden ${
+        isPreview
+          ? "min-h-[540px] rounded-3xl p-4 sm:p-6"
+          : "min-h-screen px-3.5 sm:px-4 py-8 sm:py-16"
       } flex flex-col items-center justify-center bg-gradient-to-b ${tpl.envelopeBg}`}
     >
       <SnowCanvas color={tpl.snowColor} density={isPreview ? 35 : 70} />
@@ -238,7 +240,7 @@ export function InteractiveCardViewer({
               )}
 
               <h1
-                className={`text-2xl sm:text-3xl font-bold leading-snug mb-5 ${tpl.textColor}`}
+                className={`text-xl sm:text-3xl font-bold leading-snug mb-5 break-words ${tpl.textColor}`}
               >
                 {title || "메리 크리스마스!"}
               </h1>
@@ -255,7 +257,7 @@ export function InteractiveCardViewer({
               )}
 
               <div
-                className={`w-full rounded-2xl border ${tpl.cardBorder} bg-white/5 px-5 py-6 text-left whitespace-pre-wrap leading-relaxed text-[15px] sm:text-base ${tpl.textColor}`}
+                className={`w-full rounded-2xl border ${tpl.cardBorder} bg-white/5 px-4 sm:px-5 py-5 sm:py-6 text-left whitespace-pre-wrap break-words leading-relaxed text-[15px] sm:text-base ${tpl.textColor}`}
               >
                 {message || "따뜻하고 행복한 크리스마스 보내세요!"}
               </div>
@@ -275,7 +277,7 @@ export function InteractiveCardViewer({
               </h2>
 
               <form onSubmit={handleReplySubmit} className="space-y-3">
-                <div className="inline-flex items-center gap-1 rounded-xl border border-white/20 bg-white/10 px-2 py-1">
+                <div className="inline-flex flex-wrap items-center gap-1 rounded-xl border border-white/20 bg-white/10 px-2 py-1">
                   {REPLY_EMOJIS.map((em) => (
                     <button
                       key={em}
@@ -299,12 +301,12 @@ export function InteractiveCardViewer({
                     onChange={(e) => setReplyContent(e.target.value)}
                     placeholder="따뜻한 답장을 작성해 주세요..."
                     maxLength={300}
-                    className="flex-1 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
+                    className="min-w-0 flex-1 rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
                   />
                   <button
                     type="submit"
                     disabled={isSubmittingReply}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-amber-300 px-4 py-2 text-sm font-semibold text-stone-900 hover:bg-amber-200 disabled:opacity-50 transition cursor-pointer"
+                    className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-amber-300 px-3.5 sm:px-4 py-2 text-sm font-semibold text-stone-900 hover:bg-amber-200 disabled:opacity-50 transition cursor-pointer"
                   >
                     <Send className="h-4 w-4" />
                     <span>전송</span>

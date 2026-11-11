@@ -33,6 +33,7 @@ interface SavedCardSummary {
   senderName: string;
   createdAt: string;
   deliveryCount: number;
+  recipientSummary?: string;
   replyCount: number;
   totalOpens: number;
 }
@@ -566,7 +567,9 @@ export function CardEditor() {
                         <div className="text-[11px] text-stone-500 flex flex-wrap items-center gap-1.5 mt-0.5">
                           <span>{c.senderName}</span>
                           <span>·</span>
-                          <span>발송 {c.deliveryCount}</span>
+                          <span className="text-stone-700 font-medium">
+                            {c.recipientSummary || "미발송"}
+                          </span>
                           <span>·</span>
                           <span className="text-emerald-700 font-medium">
                             열람 {c.totalOpens}

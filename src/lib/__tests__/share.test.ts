@@ -61,6 +61,8 @@ describe("share helpers", () => {
     assert.equal(payload.objectType, "feed");
     assert.match(payload.content.title, /행복한 성탄절/);
     assert.match(payload.content.description, /To\. 수진/);
+    assert.equal(payload.content.imageWidth, 1200);
+    assert.equal(payload.content.imageHeight, 600);
     assert.equal(
       payload.content.link.webUrl,
       "https://xmas.example.com/c/xyz?d=123"
