@@ -21,7 +21,9 @@ function readEnvDatabaseUrl() {
 
 const dbUrl = readEnvDatabaseUrl();
 const isPostgres =
-  dbUrl.startsWith("postgres://") || dbUrl.startsWith("postgresql://");
+  process.env.VERCEL === "1" ||
+  dbUrl.startsWith("postgres://") ||
+  dbUrl.startsWith("postgresql://");
 
 const srcSchema = path.join(
   root,

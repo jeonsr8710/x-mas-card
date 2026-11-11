@@ -9,27 +9,31 @@ export async function generateMetadata({
 }: {
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
-  const card = await prisma.card.findUnique({
-    where: { slug },
-    select: { title: true, senderName: true, message: true },
-  });
+  try {
+    const { slug } = await params;
+    const card = await prisma.card.findUnique({
+      where: { slug },
+      select: { title: true, senderName: true, message: true },
+    });
 
-  if (!card) {
-    return { title: "카드를 찾을 수 없습니다" };
+    if (!card) {
+      return { title: "카드를 찾을 수 없습니다" };
+    }
+
+    const snippet = card.message.replace(/\s+/g, " ").trim().slice(0, 80);
+
+    return {
+      title: `🎄 ${card.title} | From. ${card.senderName}`,
+      description: `${card.senderName}님이 보낸 크리스마스 카드: ${snippet}`,
+      openGraph: {
+        title: `🎄 ${card.title}`,
+        description: `From. ${card.senderName} — ${snippet}`,
+        type: "website",
+      },
+    };
+  } catch {
+    return { title: "크리스마스 카드" };
   }
-
-  const snippet = card.message.replace(/\s+/g, " ").trim().slice(0, 80);
-
-  return {
-    title: `🎄 ${card.title} | From. ${card.senderName}`,
-    description: `${card.senderName}님이 보낸 크리스마스 카드: ${snippet}`,
-    openGraph: {
-      title: `🎄 ${card.title}`,
-      description: `From. ${card.senderName} — ${snippet}`,
-      type: "website",
-    },
-  };
 }
 
 async function CardContent({

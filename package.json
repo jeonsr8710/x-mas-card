@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "npx tsc -p tsconfig.test.json && node --test .test-dist/lib/__tests__/*.test.js",
-    "db:push": "node scripts/prepare-prisma.mjs && prisma db push"
+    "db:push": "node scripts/prepare-prisma.mjs && prisma db push",
+    "postinstall": "node scripts/prepare-prisma.mjs && prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

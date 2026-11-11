@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  outputFileTracingIncludes: {
+    "/**": ["./node_modules/.prisma/client/**/*"],
+  },
   turbopack: {
     rules: {
       "*.css": {
