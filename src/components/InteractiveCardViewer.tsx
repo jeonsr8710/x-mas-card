@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import {
   MailOpen,
   Music,
@@ -61,7 +60,6 @@ export function InteractiveCardViewer({
   const openRecordedRef = useRef(false);
 
   const [replies, setReplies] = useState<ReplyItem[]>(initialReplies);
-  const [replyAuthor, setReplyAuthor] = useState(recipientName || "");
   const [replyEmoji, setReplyEmoji] = useState("🎄");
   const [replyContent, setReplyContent] = useState("");
   const [isSubmittingReply, setIsSubmittingReply] = useState(false);
@@ -110,8 +108,8 @@ export function InteractiveCardViewer({
   const handleReplySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isPreview || !slug) return;
-    if (!replyAuthor.trim() || !replyContent.trim()) {
-      setReplyFeedback("이름과 답장 내용을 모두 입력해 주세요.");
+    if (!replyContent.trim()) {
+      setReplyFeedback("답장 내용을 입력해 주세요.");
       return;
     }
 
@@ -123,7 +121,7 @@ export function InteractiveCardViewer({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          authorName: replyAuthor.trim(),
+          authorName: recipientName?.trim() || "소중한 분",
           emoji: replyEmoji,
           content: replyContent.trim(),
         }),
@@ -272,39 +270,26 @@ export function InteractiveCardViewer({
           {/* Replies Section (only on real card page) */}
           {!isPreview && slug && (
             <section className="rounded-2xl border border-white/20 bg-black/35 p-5 sm:p-6 text-white backdrop-blur-md shadow-xl">
-              <h2 className="text-base font-bold mb-1 flex items-center gap-2">
+              <h2 className="text-base font-bold mb-3 flex items-center gap-2">
                 <span>💬 답장 남기기</span>
               </h2>
-              <p className="text-xs text-white/70 mb-4">
-                {senderName}님에게 고마운 마음을 한마디로 남겨보세요.
-              </p>
 
               <form onSubmit={handleReplySubmit} className="space-y-3">
-                <div className="flex flex-wrap gap-2 items-center">
-                  <input
-                    type="text"
-                    value={replyAuthor}
-                    onChange={(e) => setReplyAuthor(e.target.value)}
-                    placeholder="보내는 분 이름"
-                    maxLength={40}
-                    className="flex-1 min-w-[140px] rounded-xl border border-white/20 bg-white/10 px-3.5 py-2 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-amber-300"
-                  />
-                  <div className="flex items-center gap-1 rounded-xl border border-white/20 bg-white/10 px-2 py-1">
-                    {REPLY_EMOJIS.map((em) => (
-                      <button
-                        key={em}
-                        type="button"
-                        onClick={() => setReplyEmoji(em)}
-                        className={`rounded-lg px-1.5 py-1 text-base transition cursor-pointer ${
-                          replyEmoji === em
-                            ? "bg-amber-300/30 ring-1 ring-amber-300"
-                            : "opacity-70 hover:opacity-100"
-                        }`}
-                      >
-                        {em}
-                      </button>
-                    ))}
-                  </div>
+                <div className="inline-flex items-center gap-1 rounded-xl border border-white/20 bg-white/10 px-2 py-1">
+                  {REPLY_EMOJIS.map((em) => (
+                    <button
+                      key={em}
+                      type="button"
+                      onClick={() => setReplyEmoji(em)}
+                      className={`rounded-lg px-2 py-1 text-base transition cursor-pointer ${
+                        replyEmoji === em
+                          ? "bg-amber-300/30 ring-1 ring-amber-300"
+                          : "opacity-70 hover:opacity-100"
+                      }`}
+                    >
+                      {em}
+                    </button>
+                  ))}
                 </div>
 
                 <div className="flex gap-2">
@@ -332,38 +317,19 @@ export function InteractiveCardViewer({
               </form>
 
               {replies.length > 0 && (
-                <ul className="mt-5 space-y-2.5 border-t border-white/15 pt-4">
+                <ul className="mt-5 space-y-2 border-t border-white/15 pt-4">
                   {replies.map((r) => (
                     <li
                       key={r.id}
-                      className="rounded-xl bg-white/10 px-3.5 py-2.5 text-sm"
+                      className="rounded-xl bg-white/10 px-3.5 py-2.5 text-sm text-white/95"
                     >
-                      <div className="flex items-center justify-between text-xs text-white/70 mb-1">
-                        <span className="font-semibold text-amber-200">
-                          {r.emoji} {r.authorName}
-                        </span>
-                        <span>
-                          {new Date(r.createdAt).toLocaleDateString("ko-KR")}
-                        </span>
-                      </div>
-                      <p className="text-white/95">{r.content}</p>
+                      <span>{r.emoji}</span>{" "}
+                      <span>{r.content}</span>
                     </li>
                   ))}
                 </ul>
               )}
             </section>
-          )}
-
-          {!isPreview && (
-            <div className="text-center pt-2">
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 rounded-full bg-white/15 px-5 py-2.5 text-xs font-medium text-white hover:bg-white/25 border border-white/20 backdrop-blur-sm transition"
-              >
-                <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-                나도 크리스마스 카드 만들어 보내기
-              </Link>
-            </div>
           )}
         </div>
       )}
