@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Card {
+  id              String     @id @default(cuid())
+  slug            String     @unique
+  manageToken     String     @unique
+  templateId      String     @default("classic-tree")
+  senderName      String
+  title           String
+  message         String
+  bgmKey          String     @default("jingle-bells")
+  customImageData String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  deliveries      Delivery[]
+  replies         Reply[]
+}
+
+model Delivery {
+  id            String    @id @default(cuid())
+  token         String    @unique
+  cardId        String
+  card          Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  recipientName String
+  channel       String
+  targetAddress String?
+  status        String    @default("READY")
+  sentAt        DateTime?
+  openedAt      DateTime?
+  openCount     Int       @default(0)
+  errorMessage  String?
+  createdAt     DateTime  @default(now())
+
+  @@index([cardId])
+}
+
+model Reply {
+  id         String   @id @default(cuid())
+  cardId     String
+  card       Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  authorName String
+  emoji      String   @default("🎄")
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@index([cardId])
+}
+
+model AppSettings {
+  id                String   @id @default("default")
+  baseUrl           String   @default("")
+  kakaoJsKey        String   @default("")
+  emailProvider     String   @default("smtp")
+  smtpHost          String   @default("")
+  smtpPort          String   @default("587")
+  smtpSecure        Boolean  @default(false)
+  smtpUser          String   @default("")
+  smtpPass          String   @default("")
+  smtpFrom          String   @default("")
+  resendApiKey      String   @default("")
+  resendFrom        String   @default("")
+  solapiApiKey      String   @default("")
+  solapiApiSecret   String   @default("")
+  solapiSenderPhone String   @default("")
+  updatedAt         DateTime @updatedAt
+}
