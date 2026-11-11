@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export function SmsLaunchClient(props: {
   deliveryId: string;
-  manageToken: string;
+  manageToken: string | null;
   recipientName: string;
   phone: string | null;
   smsUri: string;
@@ -16,6 +16,7 @@ export function SmsLaunchClient(props: {
   const [copied, setCopied] = useState(false);
 
   const handleOpenSmsApp = () => {
+    if (!props.manageToken) return;
     void fetch(`/api/manage/${props.manageToken}/deliveries`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

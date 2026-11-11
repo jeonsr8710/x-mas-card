@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { buildCardUrl, buildSmsUri } from "@/lib/share";
 import { getEffectiveSettings } from "@/lib/settings";
 import { getPrimaryLanIp, isLocalhostUrl } from "@/lib/network";
-import { headers } from "next/headers";
 import { isPublicViewerOnly } from "@/lib/mode";
 import { SmsLaunchClient } from "@/components/SmsLaunchClient";
 
@@ -13,10 +13,6 @@ async function SmsLaunchContent({
 }: {
   searchParams: Promise<{ d?: string }>;
 }) {
-  if (isPublicViewerOnly()) {
-    notFound();
-  }
-
   const { d: token } = await searchParams;
   if (!token) {
     notFound();
@@ -31,6 +27,7 @@ async function SmsLaunchContent({
     notFound();
   }
 
+  const publicOnly = isPublicViewerOnly();
   const settings = await getEffectiveSettings();
   const hdrs = await headers();
   const host = hdrs.get("host") || "localhost:3000";
@@ -49,8 +46,13 @@ async function SmsLaunchContent({
   }
 
   const cardUrl = buildCardUrl(baseUrl, delivery.card.slug, delivery.token);
+  const rawPhone =
+    delivery.targetAddress && !delivery.targetAddress.includes("*")
+      ? delivery.targetAddress
+      : "";
+
   const smsUri = buildSmsUri({
-    phone: delivery.targetAddress ?? "",
+    phone: rawPhone,
     recipientName: delivery.recipientName,
     senderName: delivery.card.senderName,
     title: delivery.card.title,
@@ -62,9 +64,9 @@ async function SmsLaunchContent({
   return (
     <SmsLaunchClient
       deliveryId={delivery.id}
-      manageToken={delivery.card.manageToken}
+      manageToken={publicOnly ? null : delivery.card.manageToken}
       recipientName={delivery.recipientName}
-      phone={delivery.targetAddress}
+      phone={rawPhone || null}
       smsUri={smsUri}
       smsText={smsText}
       cardUrl={cardUrl}

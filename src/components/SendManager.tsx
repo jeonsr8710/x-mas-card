@@ -917,6 +917,16 @@ export function SendManager({ initialCard }: { initialCard: CardRecord }) {
                       )}
                       문자 내용 복사
                     </button>
+                    {!smsResult.sentViaApi && (
+                      <button
+                        type="button"
+                        onClick={() => markDeliverySent(smsResult.deliveryId)}
+                        className="inline-flex items-center gap-1.5 rounded-xl border border-stone-300 bg-white px-3.5 py-2 font-semibold text-stone-700 hover:bg-stone-100 cursor-pointer"
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                        전송 완료 표시
+                      </button>
+                    )}
                   </div>
                 </div>
 
@@ -929,7 +939,7 @@ export function SendManager({ initialCard }: { initialCard: CardRecord }) {
                       className="h-32 w-32"
                     />
                     <span className="mt-1.5 text-[10px] font-medium text-stone-600 text-center">
-                      같은 Wi-Fi 폰으로 스캔하면
+                      폰 카메라로 스캔하면
                       <br />
                       문자 전송 화면이 열립니다
                     </span>
