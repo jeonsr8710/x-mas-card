@@ -150,3 +150,33 @@ export async function PATCH(
     );
   }
 }
+
+export async function DELETE(
+  _req: Request,
+  context: { params: Promise<{ manageToken: string }> }
+) {
+  if (isPublicViewerOnly()) {
+    return NextResponse.json(
+      { error: "공개 뷰어 모드에서는 삭제할 수 없습니다." },
+      { status: 403 }
+    );
+  }
+  try {
+    const { manageToken } = await context.params;
+    const deleted = await prisma.card.deleteMany({
+      where: { manageToken },
+    });
+    if (deleted.count === 0) {
+      return NextResponse.json(
+        { error: "삭제할 카드를 찾을 수 없습니다." },
+        { status: 404 }
+      );
+    }
+    return NextResponse.json({ deleted: true });
+  } catch {
+    return NextResponse.json(
+      { error: "카드 삭제 중 오류가 발생했습니다." },
+      { status: 500 }
+    );
+  }
+}

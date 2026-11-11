@@ -7,6 +7,57 @@ import { CARD_TEMPLATES, BGM_OPTIONS } from "@/lib/templates";
 const VALID_BGM = new Set(BGM_OPTIONS.map((b) => b.key));
 const MAX_IMAGE_CHARS = 1_600_000;
 
+export async function GET() {
+  if (isPublicViewerOnly()) {
+    return NextResponse.json(
+      { error: "공개 뷰어 모드에서는 카드 목록을 조회할 수 없습니다." },
+      { status: 403 }
+    );
+  }
+  try {
+    const rows = await prisma.card.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      select: {
+        id: true,
+        slug: true,
+        manageToken: true,
+        templateId: true,
+        senderName: true,
+        title: true,
+        createdAt: true,
+        deliveries: {
+          select: { openCount: true },
+        },
+        _count: {
+          select: { deliveries: true, replies: true },
+        },
+      },
+    });
+
+    const cards = rows.map((c) => ({
+      id: c.id,
+      slug: c.slug,
+      manageToken: c.manageToken,
+      templateId: c.templateId,
+      senderName: c.senderName,
+      title: c.title,
+      createdAt: c.createdAt.toISOString(),
+      deliveryCount: c._count.deliveries,
+      replyCount: c._count.replies,
+      totalOpens: c.deliveries.reduce((sum, d) => sum + d.openCount, 0),
+    }));
+
+    return NextResponse.json({ cards });
+  } catch (err) {
+    console.error("Failed to list cards:", err);
+    return NextResponse.json(
+      { error: "카드 목록을 불러오지 못했습니다." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(req: Request) {
   if (isPublicViewerOnly()) {
     return NextResponse.json(
