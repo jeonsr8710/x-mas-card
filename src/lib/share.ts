@@ -88,7 +88,7 @@ export function buildKakaoSharePayload(params: {
     },
     buttons: [
       {
-        title: "크리스마스 카드 열어보기",
+        title: "온라인카드 열어보기",
         link: {
           mobileWebUrl: params.cardUrl,
           webUrl: params.cardUrl,

@@ -65,6 +65,6 @@ describe("share helpers", () => {
       payload.content.link.webUrl,
       "https://xmas.example.com/c/xyz?d=123"
     );
-    assert.equal(payload.buttons[0].title, "크리스마스 카드 열어보기");
+    assert.equal(payload.buttons[0].title, "온라인카드 열어보기");
   });
 });

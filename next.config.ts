@@ -4,7 +4,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   outputFileTracingIncludes: {
-    "/**": ["./node_modules/.prisma/client/**/*"],
+    "/**": [
+      "./node_modules/.prisma/client/**/*",
+      "./assets/fonts/**/*",
+    ],
   },
   turbopack: {
     rules: {
