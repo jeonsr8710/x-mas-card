@@ -158,7 +158,7 @@ export function renderChristmasEmailHtml(params: {
                 From. <strong style="color:${cardTextColor};">${safeSender}</strong>
               </p>
               <a href="${safeUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:14px 28px;border-radius:999px;background-color:${tpl.ogAccent};color:#1c1917;font-size:15px;font-weight:700;text-decoration:none;">
-                ✨ 인터랙티브 카드 열어보기 (눈 · 음악 · 답장)
+                ✨ 온라인카드 열어보기
               </a>
               <p style="margin:16px 0 0 0;font-size:12px;color:${cardMutedColor};">
                 버튼이 동작하지 않으면 아래 링크를 복사해 열어주세요:<br />
